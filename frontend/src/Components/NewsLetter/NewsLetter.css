@@ -1,6 +1,6 @@
 .newsletter{
     width: 65%;
-    height: 40vh;
+    height: 50vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -8,7 +8,7 @@
     margin: auto;
     padding: 0px 140px;
     margin-bottom: 150px;
-    background: linear-gradient(180deg,#fde1ff 0%,#e1ffea22 60%);
+    background: linear-gradient(180deg,#694569 0%,#e1ffea22 60%);
     gap: 30px;
 }
 
@@ -54,11 +54,11 @@
     cursor: pointer;
 }
 
-@media(max-width:1280){
+@media(max-width:1280px){
     .newsletter{
-        padding: 0px 80px;
+        padding: 10px 80px;
         margin-bottom: 120px;
-        gap: 20px;
+        gap: 10px;
     }
     .newsletter h1{
         font-size: 36px;
@@ -79,7 +79,7 @@
     }
 }
 
-@media(max-width:1024){
+@media(max-width:1024px){
     .newsletter{
         margin-bottom: 60px;
     }
@@ -104,7 +104,7 @@
     }
 }
 
-@media(max-width:800){
+@media(max-width:800px){
     .newsletter{
         margin-bottom: 30px;
         height: 35vh;
@@ -130,12 +130,10 @@
     }
 }
 
-@media(max-width:500){
+@media(max-width:500px){
     .newsletter{
         height: 25vh;
-        width: 100%;
-        padding: 0;
-        gap: 15px;
+        margin-bottom: 50px;
     }
     .newsletter h1{
         font-size: 16px;

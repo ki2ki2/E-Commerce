@@ -62,7 +62,7 @@
     background: #c7c7c7;
 }
 
-@media(max-width:800){
+@media(max-width:800px){
     .footer{
         gap: 20px;
     }
