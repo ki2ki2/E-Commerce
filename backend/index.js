@@ -49,31 +49,10 @@ const baseUrl = process.env.NODE_ENV === 'production'
   : `http://localhost:${port}`;
 
 app.post('/upload',upload.single('product'),async(req,res)=>{
-    // res.json({
-    //     success:1,
-    //     image_url:`${baseUrl}/images/${req.file.filename}`
-    // })
-    try {
-        const imageUrl = `${baseUrl}/images/${req.file.filename}`;
-        
-        // Assume req.body.productId contains the product ID to be updated
-        const updatedProduct = await Product.findByIdAndUpdate(req.body.productId, {
-            image: imageUrl
-        }, { new: true });
-
-        if (updatedProduct) {
-            res.json({
-                success: 1,
-                image_url: imageUrl,
-                product: updatedProduct
-            });
-        } else {
-            res.status(404).json({ success: 0, message: "Product not found" });
-        }
-    } catch (error) {
-        console.error("Error updating MongoDB:", error);
-        res.status(500).json({ success: 0, message: "Error saving to database" });
-    }
+    res.json({
+        success:1,
+        image_url:`${baseUrl}/images/${req.file.filename}`
+    })
 })
 
 // Schema for Creating Products
