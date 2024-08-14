@@ -254,11 +254,11 @@
 
 @media(max-width:500px){
     .productdisplay{
-        margin: 0px 10px;
+        margin: 0px 1px;
         display: block;
     }
     .productdisplay-left{
-        gap: 25px;
+        gap: 20px;
         flex-direction: row;
         margin: 30px;
     }
@@ -267,19 +267,19 @@
         gap: 8px;
     }
     .productdisplay-img-list img{
-        height: 82px;
+        height: 70px;
     }
     .productdisplay-main-img{
-        width: 300px;
-        height: 350px;
+        width: 250px;
+        height: 300px;
     }
     .productdisplay-right{
         margin: 30px;
     }
     .productdisplay-right h1{
         margin-top: 15px;
-        font-size: 20px;
-        font-weight: 500;
+        font-size: 25px;
+        font-weight: 680;
     }
     .productdisplay-right-star img{
         width: 15px;
