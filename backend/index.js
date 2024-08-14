@@ -11,7 +11,11 @@ app.use(express.json());
 app.use(cors());
 
 // Database Connection with MongoDB
-mongoose.connect("mongodb+srv://kritikumari36312:backend_server@cluster0.n3rzche.mongodb.net/e-commerce")
+mongoose.connect(process.env.MONGO_URL || "mongodb+srv://kritikumari36312:backend_server@cluster0.n3rzche.mongodb.net/e-commerce", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}).then(() => console.log("MongoDB connected"))
+.catch(err => console.log("MongoDB connection error:", err));
 
 // API Creation
 app.get("/",(req,res)=>{
@@ -44,11 +48,32 @@ const baseUrl = process.env.NODE_ENV === 'production'
   ? 'https://e-commerce-backend-c6zo.onrender.com' 
   : `http://localhost:${port}`;
 
-app.post('/upload',upload.single('product'),(req,res)=>{
-    res.json({
-        success:1,
-        image_url:`${baseUrl}/images/${req.file.filename}`
-    })
+app.post('/upload',upload.single('product'),async(req,res)=>{
+    // res.json({
+    //     success:1,
+    //     image_url:`${baseUrl}/images/${req.file.filename}`
+    // })
+    try {
+        const imageUrl = `${baseUrl}/images/${req.file.filename}`;
+        
+        // Assume req.body.productId contains the product ID to be updated
+        const updatedProduct = await Product.findByIdAndUpdate(req.body.productId, {
+            image: imageUrl
+        }, { new: true });
+
+        if (updatedProduct) {
+            res.json({
+                success: 1,
+                image_url: imageUrl,
+                product: updatedProduct
+            });
+        } else {
+            res.status(404).json({ success: 0, message: "Product not found" });
+        }
+    } catch (error) {
+        console.error("Error updating MongoDB:", error);
+        res.status(500).json({ success: 0, message: "Error saving to database" });
+    }
 })
 
 // Schema for Creating Products
