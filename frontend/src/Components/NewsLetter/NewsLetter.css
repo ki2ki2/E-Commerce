@@ -132,6 +132,7 @@
 
 @media(max-width:500px){
     .newsletter{
+        width: 50%;
         height: 25vh;
         margin-bottom: 50px;
     }

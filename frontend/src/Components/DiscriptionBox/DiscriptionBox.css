@@ -1,5 +1,5 @@
 .discriptionbox{
-    margin: 120px 170px;
+    margin: 50px 100px;
 }
 
 .discriptionbox-navigator{
@@ -33,7 +33,7 @@
 
 @media(max-width:1280px){
     .discriptionbox{
-        margin: 16px;
+        margin: 50px;
     }
 }
 
