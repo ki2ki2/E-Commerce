@@ -11,11 +11,15 @@ app.use(express.json());
 app.use(cors());
 
 // Database Connection with MongoDB
-mongoose.connect(process.env.MONGO_URL || "mongodb+srv://kritikumari36312:backend_server@cluster0.n3rzche.mongodb.net/e-commerce", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-}).then(() => console.log("MongoDB connected"))
-.catch(err => console.log("MongoDB connection error:", err));
+// mongoose.connect(process.env.MONGO_URL || "mongodb+srv://kritikumari36312:backend_server@cluster0.n3rzche.mongodb.net/e-commerce", {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+// }).then(() => console.log("MongoDB connected"))
+// .catch(err => console.log("MongoDB connection error:", err));
+
+mongoose.connect(process.env.MONGO_URL || "mongodb+srv://kritikumari36312:backend_server@cluster0.n3rzche.mongodb.net/e-commerce")
+    .then(() => console.log("MongoDB connected"))
+    .catch(err => console.log("MongoDB connection error:", err));
 
 // API Creation
 app.get("/",(req,res)=>{
