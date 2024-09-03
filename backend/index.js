@@ -7,6 +7,13 @@ const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
 
+
+
+const fs = require('fs');    // some changes
+
+
+
+
 app.use(express.json());
 app.use(cors());
 
@@ -17,9 +24,19 @@ app.use(cors());
 // }).then(() => console.log("MongoDB connected"))
 // .catch(err => console.log("MongoDB connection error:", err));
 
+
+
+
+
+// some changes
 mongoose.connect(process.env.MONGO_URL || "mongodb+srv://kritikumari36312:backend_server@cluster0.n3rzche.mongodb.net/e-commerce")
     .then(() => console.log("MongoDB connected"))
     .catch(err => console.log("MongoDB connection error:", err));
+
+
+
+
+
 
 // API Creation
 app.get("/",(req,res)=>{
@@ -35,29 +52,83 @@ app.listen(port,(error)=>{
     }
 })
 
+
+
+
+
+
+//some changes
+const uploadDir = './upload/images';
+if(!fs.existsSync(uploadDir)){
+    fs.mkdirSync(uploadDir,{recursive:true});
+}
+
 // Image Storage Engine
 const storage = multer.diskStorage({
-    destination: './upload/images',
-    filename:(req,file,cb)=>{
-        return cb(null,`${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+    destination: uploadDir,
+    filename: (req, file, cb) => {
+        cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);
     }
-})
-const upload = multer({storage:storage})
+});
+const upload = multer({ storage: storage });
 
-// Creating Upload Endpoint for images
-app.use('/images',express.static('upload/images'))
+// Serve static files from the upload directory
+app.use('/images', express.static(path.join(__dirname, 'upload/images')));
 
 // Determine the base URL dynamically
 const baseUrl = process.env.NODE_ENV === 'production' 
-  ? 'https://e-commerce-backend-c6zo.onrender.com' 
-  : `http://localhost:${port}`;
+    ? 'https://e-commerce-backend-c6zo.onrender.com' 
+    : `http://localhost:${port}`;
 
-app.post('/upload',upload.single('product'),async(req,res)=>{
+// Upload endpoint for images
+app.post('/upload', upload.single('product'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ success: 0, message: 'No file uploaded' });
+    }
+
     res.json({
-        success:1,
-        image_url:`${baseUrl}/images/${req.file.filename}`
-    })
-})
+        success: 1,
+        image_url: `${baseUrl}/images/${req.file.filename}`
+    });
+});
+
+// Start the server
+// app.listen(port, () => console.log(`Server running on port ${port}`));
+
+
+
+
+
+
+
+
+
+
+
+
+// Image Storage Engine
+// const storage = multer.diskStorage({
+//     destination: './upload/images',
+//     filename:(req,file,cb)=>{
+//         return cb(null,`${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+//     }
+// })
+// const upload = multer({storage:storage})
+
+// // Creating Upload Endpoint for images
+// app.use('/images',express.static('upload/images'))
+
+// // Determine the base URL dynamically
+// const baseUrl = process.env.NODE_ENV === 'production' 
+//   ? 'https://e-commerce-backend-c6zo.onrender.com' 
+//   : `http://localhost:${port}`;
+
+// app.post('/upload',upload.single('product'),async(req,res)=>{
+//     res.json({
+//         success:1,
+//         image_url:`${baseUrl}/images/${req.file.filename}`
+//     })
+// })
 
 // Schema for Creating Products
 const Product = mongoose.model("Product",{
