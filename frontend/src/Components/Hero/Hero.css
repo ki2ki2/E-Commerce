@@ -91,34 +91,6 @@
     }
 }
 
-@media(min-width:1280px){
-    .hero {
-        height: 80vh;
-    }
-    .hero-left{
-        padding-left: 100px;
-    }
-    .hero-hand-icon img{
-        width: 80px;
-    }
-    .hero-left h2{
-        font-size: 22px;
-    }
-    .hero-left p{
-        font-size: 60px;
-    }
-    .hero-latest-btn{
-        gap: 10px;
-        width: 250px;
-        height: 60px;
-        margin-top: 20px;
-        font-size: 18px;
-    }
-    .hero-right img{
-        width: 300px;
-    }
-}
-
 @media(max-width:1024px){
     .hero {
         height: 70vh;
