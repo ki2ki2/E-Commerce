@@ -6,16 +6,47 @@ const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
-
-
+const stripe = require("stripe");
+const stripe = Stripe("sk_test_51PvOql02k1yCOeuvPvB7F3USBJUYJRSGAqKvxOnxa0jIdN5RJrzlAtE3PIVAob0apLqUHiaoVhq7HBOFlQ9zedsS000Dps62l4");
 
 const fs = require('fs');    // some changes
 
-
-
-
 app.use(express.json());
 app.use(cors());
+
+//checkout api
+app.get("/create-checkout-session",async(req,res)=>{
+    const {products} = req.body;
+    console.log("abs")
+    try{
+        const lineItems = products.map((product)=>({
+            price_data:{
+                currency:"inr",
+                product_data:{
+                    name:product.name
+                },
+                unit_amount:product.new_price*100,
+            },
+            quantity:1
+        }));
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ["card"],
+            line_items:lineItems,
+            mode:"payment",
+            success_url:"http://localhost:3000/success",
+            cancel_url:"http://localhost:3000/cancel",
+        });
+        res.json({ id: session.id });
+    }
+    catch (error) {
+        console.error("Error creating Stripe session:", error);
+        res.status(500).json({ error: 'Failed to create Stripe session' });
+    }
+});
+
+// app.listen(4000,()=>{
+//     console.log("server start");
+// })
 
 // Database Connection with MongoDB
 // mongoose.connect(process.env.MONGO_URL || "mongodb+srv://kritikumari36312:backend_server@cluster0.n3rzche.mongodb.net/e-commerce", {
@@ -35,9 +66,6 @@ mongoose.connect(process.env.MONGO_URL || "mongodb+srv://kritikumari36312:backen
 
 
 
-
-
-
 // API Creation
 app.get("/",(req,res)=>{
     res.send("Express App is Running")
@@ -51,9 +79,6 @@ app.listen(port,(error)=>{
         console.log("Error : "+error)
     }
 })
-
-
-
 
 
 
