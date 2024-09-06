@@ -11,9 +11,7 @@ const stripe = Stripe("sk_test_51PvOql02k1yCOeuvPvB7F3USBJUYJRSGAqKvxOnxa0jIdN5R
 const fs = require('fs');    // some changes
 
 app.use(express.json());
-app.use(cors({
-    origin:'*',
-}));
+app.use(cors());
 
 //checkout api
 app.post("/create-checkout-session",async(req,res)=>{
@@ -31,14 +29,14 @@ app.post("/create-checkout-session",async(req,res)=>{
                     unit_amount: product.new_price * 100,
                 },
                 quantity:cart_items[product.id],
-            };
+        };
         });
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             line_items:lineItems,
             mode:"payment",
-            success_url:"https://e-commerce-backend-c6zo.onrender.com/success",
-            cancel_url:"https://e-commerce-backend-c6zo.onrender.com/cancel",
+            success_url:"http://localhost:3000/success",
+            cancel_url:"http://localhost:3000/cancel",
         });
         res.json({ id: session.id });
     }

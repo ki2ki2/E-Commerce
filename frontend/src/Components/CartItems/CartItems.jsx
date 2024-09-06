@@ -21,7 +21,7 @@ const CartItems = () => {
 
         try{
             console.log("aaaaaa");
-            const response = await fetch("https://e-commerce-backend-c6zo.onrender.com/create-checkout-session",{
+            const response = await fetch("http://localhost:7000/create-checkout-session",{
                 method:"POST",
                 headers:{
                     "Content-Type": "application/json"
