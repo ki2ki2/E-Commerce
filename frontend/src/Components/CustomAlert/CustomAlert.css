@@ -24,3 +24,12 @@
 .custom-alert button:hover {
     background-color: #45a049;
 }
+
+.custom-alert{
+    background: rgb(255, 255, 255);
+    height: 100vh;
+    position: absolute;
+    z-index: 99999;
+    top: 0;
+    width: 100vw;
+}

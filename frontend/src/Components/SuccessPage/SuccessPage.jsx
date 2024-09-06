@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CustomAlert from '../CustomAlert/CustomAlert';
+import { ShopContext } from '../../Context/ShopContext';
 
 const SuccessPage = () => {
     const [showAlert, setShowAlert] = useState(true);
     const navigate = useNavigate();
+    const {all_product,cartItems,getTotalCartAmount,removeFromCart, clearcart} = useContext(ShopContext)
 
-    const handleClose = () => {
-        setShowAlert(false);
-        setTimeout(() => {
-            navigate('/');
-        }, 300); // Adjust the timeout if needed
+    const handleClose = async() => {
+        await clearcart()
+        navigate('/');
     };
 
     return (
@@ -21,7 +21,6 @@ const SuccessPage = () => {
                     onClose={handleClose}
                 />
             )}
-            {/* Rest of your SuccessPage component */}
         </div>
     );
 };

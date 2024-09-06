@@ -35,7 +35,7 @@ app.post("/create-checkout-session",async(req,res)=>{
             payment_method_types: ["card"],
             line_items:lineItems,
             mode:"payment",
-            success_url:"http://localhost:3000/success",
+            success_url:"https://e-commerce-front-0j6w.onrender.com/success",
             cancel_url:"http://localhost:3000/cancel",
         });
         res.json({ id: session.id });
@@ -118,16 +118,6 @@ app.post('/upload', upload.single('product'), (req, res) => {
 
 // Start the server
 // app.listen(port, () => console.log(`Server running on port ${port}`));
-
-
-
-
-
-
-
-
-
-
 
 
 // Image Storage Engine
@@ -365,3 +355,25 @@ app.post('/getcart',fetchUser,async (req,res)=>{
     let userData=await Users.findOne({_id:req.user.id});
     res.json(userData.cartData);
 })
+
+app.post('/clearcart', fetchUser, async (req, res) => {
+    try {
+        let userData = await Users.findOne({ _id: req.user.id });
+        
+        // Set all cart items to 0
+        Object.keys(userData.cartData).forEach(itemId => {
+            userData.cartData[itemId] = 0;
+        });
+
+        // Update the cartData in the database
+        await Users.findOneAndUpdate(
+            { _id: req.user.id }, 
+            { cartData: userData.cartData }
+        );
+        
+        res.send("Cart cleared successfully");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error clearing the cart");
+    }
+});

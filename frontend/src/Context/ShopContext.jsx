@@ -69,6 +69,23 @@ const ShopContextProvider = (props) =>{
         }
     }
 
+    const clearcart=(itemId)=>{
+        setCartItems((prev)=>({...prev,[itemId]:prev[itemId]-1}))
+        if(localStorage.getItem('auth-token')){
+            fetch('https://e-commerce-backend-c6zo.onrender.com/clearcart',{
+                method:'POST',
+                headers:{
+                    Accept:'application/form-data',
+                    'auth-token':`${localStorage.getItem('auth-token')}`,
+                    'content-Type':'application/json',
+                },
+                body:JSON.stringify({"itemId":itemId}),
+            })
+            .then((response)=>response.json())
+            .then((data)=>console.log(data));
+        }
+    }
+
     const getTotalCartAmount = () => {
         let totalAmount = 0;
         for(const item in cartItems){
@@ -90,7 +107,7 @@ const ShopContextProvider = (props) =>{
         return totalItem;
     }
 
-    const contextValue = {all_product,cartItems,getTotalCartItems,getTotalCartAmount,addToCart,removeFromCart};
+    const contextValue = {all_product,cartItems,getTotalCartItems,getTotalCartAmount,addToCart,removeFromCart,clearcart};
 
     return(
         <ShopContext.Provider value={contextValue}>

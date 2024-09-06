@@ -5,7 +5,7 @@ import remove_icon from '../Assets/cart_cross_icon.png'
 import {loadStripe} from '@stripe/stripe-js';
 
 const CartItems = () => {
-    const {all_product,cartItems,getTotalCartAmount,removeFromCart} = useContext(ShopContext)
+    const {all_product,cartItems,getTotalCartAmount,removeFromCart, clearcart} = useContext(ShopContext)
 
     var stripePromise = loadStripe("pk_test_51PvOql02k1yCOeuvnWACjjRnygXnrXf3r20iPQVA6Ei91ioyoEsRQimUiY0bXbcfXVSMs5SkuCCyVYyxS0hTwepE00xs4pXi16");
 
