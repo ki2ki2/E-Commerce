@@ -26,9 +26,9 @@ app.post("/create-checkout-session",async(req,res)=>{
                 product_data:{
                     name:product.name
                 },
-                unit_amount: product.new_price * cart_items[product.id] * 100,
+                unit_amount: product.new_price * 100,
             },
-            quantity:1,
+            quantity:cart_items[product.id],
         };
         });
         const session = await stripe.checkout.sessions.create({
