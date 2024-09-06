@@ -7,7 +7,7 @@ import {loadStripe} from '@stripe/stripe-js';
 const CartItems = () => {
     const {all_product,cartItems,getTotalCartAmount,removeFromCart} = useContext(ShopContext)
 
-    const stripePromise = loadStripe("pk_test_51PvOql02k1yCOeuvnWACjjRnygXnrXf3r20iPQVA6Ei91ioyoEsRQimUiY0bXbcfXVSMs5SkuCCyVYyxS0hTwepE00xs4pXi16");
+    var stripePromise = loadStripe("pk_test_51PvOql02k1yCOeuvnWACjjRnygXnrXf3r20iPQVA6Ei91ioyoEsRQimUiY0bXbcfXVSMs5SkuCCyVYyxS0hTwepE00xs4pXi16");
 
     // payment integration
     const makePayment = async()=>{
@@ -15,28 +15,47 @@ const CartItems = () => {
         const stripe = await stripePromise;
 
         const body = {
-            products:all_product
+            products:all_product.filter(product => cartItems[product.id]>0),
+            // total_price:getTotalCartAmount(),
+            cart_items: cartItems,
         };
         console.log("body",body);
-        const headers = {
-            "Content-Type": "application/json"
-        };
+        // const headers = {
+        //     "Content-Type": "application/json"
+        // };
         try{
-            const response = await fetch("http://localhost:4000/create-checkout-session",{
+            console.log("aaaaaa");
+            const response = await fetch("http://localhost:7000/create-checkout-session",{
                 method:"POST",
-                headers:headers,
+                headers:{
+                    "Content-Type": "application/json"
+                },
                 body:JSON.stringify(body)
             });
+            
             const session = await response.json();
-            const result = stripe.redirectToCheckout({
-                sessionId:session.id
-            });
-            if (result.error) {
-                console.error(result.error.message);
+        //     const result = await stripe.redirectToCheckout({
+        //         sessionId:session.id
+        //     });
+        //     if (result.error) {
+        //         console.error(result.error.message);
+        //     }
+        // } 
+        // catch (error) {
+        //     console.error("Error during payment process:", error);
+        // }
+
+            console.log("Session response:", session); // Log the session response
+            if (session.id) {
+                const result = await stripe.redirectToCheckout({ sessionId: session.id });
+                if (result.error) {
+                    console.log(result.error.message);
+                }
+            } else {
+                console.log("Session creation failed");
             }
-        } 
-        catch (error) {
-            console.error("Error during payment process:", error);
+        } catch (error) {
+            console.log("Error during payment process:", error);
         }
         
     }
@@ -89,7 +108,7 @@ const CartItems = () => {
                         <h3>Rs.{getTotalCartAmount()}</h3>
                     </div>
                 </div>
-                <button className='btn btn-success' onClick={makePayment}>PROCEED TO CHECKOUT</button>
+                <button onClick={makePayment} >PROCEED TO CHECKOUT</button>
             </div>
             <div className="cartitems-promocode">
                 <p>If you have a promo code, Enter it here</p>
@@ -113,7 +132,7 @@ const CartItems = () => {
       </div> */}
 
     </div>
-  )
-}
+  );
+};
 
-export default CartItems
+export default CartItems;
