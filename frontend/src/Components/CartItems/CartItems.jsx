@@ -11,21 +11,17 @@ const CartItems = () => {
 
     // payment integration
     const makePayment = async()=>{
-        console.log("absc")
         const stripe = await stripePromise;
 
         const body = {
             products:all_product.filter(product => cartItems[product.id]>0),
-            // total_price:getTotalCartAmount(),
             cart_items: cartItems,
         };
         console.log("body",body);
-        // const headers = {
-        //     "Content-Type": "application/json"
-        // };
+
         try{
             console.log("aaaaaa");
-            const response = await fetch("http://localhost:7000/create-checkout-session",{
+            const response = await fetch("https://e-commerce-backend-c6zo.onrender.com/create-checkout-session",{
                 method:"POST",
                 headers:{
                     "Content-Type": "application/json"
@@ -34,18 +30,6 @@ const CartItems = () => {
             });
             
             const session = await response.json();
-        //     const result = await stripe.redirectToCheckout({
-        //         sessionId:session.id
-        //     });
-        //     if (result.error) {
-        //         console.error(result.error.message);
-        //     }
-        // } 
-        // catch (error) {
-        //     console.error("Error during payment process:", error);
-        // }
-
-            console.log("Session response:", session); // Log the session response
             if (session.id) {
                 const result = await stripe.redirectToCheckout({ sessionId: session.id });
                 if (result.error) {
@@ -54,7 +38,8 @@ const CartItems = () => {
             } else {
                 console.log("Session creation failed");
             }
-        } catch (error) {
+        } 
+        catch (error) {
             console.log("Error during payment process:", error);
         }
         

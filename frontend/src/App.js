@@ -11,8 +11,7 @@ import Footer from './Components/Footer/Footer'
 import men_banner from './Components/Assets/banner_mens.png'
 import women_banner from './Components/Assets/banner_women.png'
 import kid_banner from './Components/Assets/banner_kids.png'
-import Cancel from './Components/Cancel/Cancel';
-import Sucess from './Components/Sucess/Sucess';
+import SuccessPage from './Components/SuccessPage/SuccessPage';
 
 function App() {
   return (
@@ -28,9 +27,8 @@ function App() {
             <Route path=':productId' element={<Product/>}/>
           </Route>
           <Route path='/cart' element={<Cart/>} />
-          <Route path='/sucess' element={<Sucess/>} />
-          <Route path='/cancel' element={<Cancel/>} />
           <Route path='/login' element={<LoginSignup/>} />
+          <Route path='/success' element={<SuccessPage/>} />
         </Routes>
         <Footer/>
       </BrowserRouter>

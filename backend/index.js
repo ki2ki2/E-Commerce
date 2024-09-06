@@ -21,22 +21,22 @@ app.post("/create-checkout-session",async(req,res)=>{
     try{
         const lineItems = products.map((product,index)=>{
             return{
-            price_data:{
-                currency:"inr",
-                product_data:{
-                    name:product.name
+                price_data:{
+                    currency:"inr",
+                    product_data:{
+                        name:product.name
+                    },
+                    unit_amount: product.new_price * 100,
                 },
-                unit_amount: product.new_price * 100,
-            },
-            quantity:cart_items[product.id],
-        };
+                quantity:cart_items[product.id],
+            };
         });
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             line_items:lineItems,
             mode:"payment",
-            success_url:"http://localhost:3000/success",
-            cancel_url:"http://localhost:3000/cancel",
+            success_url:"https://e-commerce-backend-c6zo.onrender.com/success",
+            cancel_url:"https://e-commerce-backend-c6zo.onrender.com/cancel",
         });
         res.json({ id: session.id });
     }
@@ -56,9 +56,6 @@ app.listen(7000,()=>{
 //     useUnifiedTopology: true,
 // }).then(() => console.log("MongoDB connected"))
 // .catch(err => console.log("MongoDB connection error:", err));
-
-
-
 
 
 // some changes
