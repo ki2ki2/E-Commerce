@@ -11,7 +11,9 @@ const stripe = Stripe("sk_test_51PvOql02k1yCOeuvPvB7F3USBJUYJRSGAqKvxOnxa0jIdN5R
 const fs = require('fs');    // some changes
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin:'*',
+}));
 
 //checkout api
 app.post("/create-checkout-session",async(req,res)=>{
