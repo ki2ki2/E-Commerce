@@ -1,10 +1,16 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import './Hero.css'
 import hand_icon from '../Assets/hand_icon.png'
 import arrow_icon from '../Assets/arrow.png'
 import hero_image from '../Assets/hero_imageee.png'
+import { ShopContext } from '../../Context/ShopContext'
 
 const Hero = () => {
+  const {getTotalCartItems}=useContext(ShopContext);
+  useEffect(() => {
+    getTotalCartItems()
+  }, [])
+  
   return (
     <div className='hero'>
       <div className='hero-left'>
