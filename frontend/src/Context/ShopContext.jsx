@@ -84,7 +84,7 @@ const ShopContextProvider = (props) => {
 
   const clearCart = () => {
     if (localStorage.getItem('auth-token')) {
-      fetch('http://localhost:3000/clearcart', {
+      fetch('https://e-commerce-backend-c6zo.onrender.com/clearcart', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
