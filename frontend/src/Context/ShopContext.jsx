@@ -70,19 +70,60 @@ const ShopContextProvider = (props) =>{
     }
 
     const clearcart=(itemId)=>{
-        setCartItems((prev)=>({...prev,[itemId]:prev[itemId]-1}))
-        if(localStorage.getItem('auth-token')){
-            fetch('https://e-commerce-backend-c6zo.onrender.com/clearcart',{
-                method:'POST',
-                headers:{
-                    Accept:'application/form-data',
-                    'auth-token':`${localStorage.getItem('auth-token')}`,
-                    'content-Type':'application/json',
-                },
-                body:JSON.stringify({"itemId":itemId}),
+        // setCartItems((prev)=>({...prev,[itemId]:prev[itemId]-1}))
+        // if(localStorage.getItem('auth-token')){
+        //     fetch('https://e-commerce-backend-c6zo.onrender.com/clearcart',{
+        //         method:'POST',
+        //         headers:{
+        //             Accept:'application/form-data',
+        //             'auth-token':`${localStorage.getItem('auth-token')}`,
+        //             'content-Type':'application/json',
+        //         },
+        //         body:JSON.stringify({"itemId":itemId}),
+        //     })
+        //     .then((response)=>response.json())
+        //     .then((data)=>console.log(data));
+        // }
+
+        // fetch('https://e-commerce-backend-c6zo.onrender.com/clearcart', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'auth-token': localStorage.getItem('auth-token')
+        //     }
+        // })
+        // .then((response) => response.json())
+        // .then((data) => {
+        //     console.log(data);
+        //     // Set cart to empty in frontend state
+        //     setCartItems({});
+            
+        //     // Redirect to home page or payment success page
+        //     window.location.href = '/home'; 
+        // })
+        // .catch((error) => console.error('Error clearing cart:', error));
+
+
+        if (localStorage.getItem('auth-token')) {
+            alert("heelo")
+            fetch('https://e-commerce-backend-c6zo.onrender.com/clearcart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'auth-token': localStorage.getItem('auth-token'),
+                }
             })
-            .then((response)=>response.json())
-            .then((data)=>console.log(data));
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+    
+                // Update cart state to empty without refreshing the page
+                setCartItems({});  // Assuming you're using setCartItems to manage the cart state
+    
+                // Optionally, show a success message or redirect the user to another page
+                // window.location.href = '/home'; // Optional: Redirect after clearing cart
+            })
+            .catch((error) => console.error('Error clearing cart:', error));
         }
     }
 

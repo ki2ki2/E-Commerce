@@ -358,17 +358,17 @@ app.post('/getcart',fetchUser,async (req,res)=>{
 
 app.post('/clearcart', fetchUser, async (req, res) => {
     try {
-        let userData = await Users.findOne({ _id: req.user.id });
+        // let userData = await Users.findOne({ _id: req.user.id });
         
         // Set all cart items to 0
-        Object.keys(userData.cartData).forEach(itemId => {
-            userData.cartData[itemId] = 0;
-        });
+        // Object.keys(userData.cartData).forEach(itemId => {
+        //     userData.cartData[itemId] = 0;
+        // });
 
         // Update the cartData in the database
         await Users.findOneAndUpdate(
             { _id: req.user.id }, 
-            { cartData: userData.cartData }
+            { cartData: {} }
         );
         
         res.send("Cart cleared successfully");
