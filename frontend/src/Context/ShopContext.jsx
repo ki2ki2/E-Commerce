@@ -1,160 +1,144 @@
-import React, {createContext, useEffect, useState} from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 export const ShopContext = createContext(null);
 
-const getDefaultCart=()=>{
-    let cart={};
-    for (let index = 0; index < 300+1; index++) {
-        cart[index]=0;
+const getDefaultCart = () => {
+  let cart = {};
+  for (let index = 0; index <= 300; index++) {
+    cart[index] = 0;
+  }
+  return cart;
+};
+
+const ShopContextProvider = (props) => {
+  const [all_product, setAll_Product] = useState([]);
+  const [cartItems, setCartItems] = useState(getDefaultCart());
+
+  useEffect(() => {
+    // Fetch all products
+    fetch('https://e-commerce-backend-c6zo.onrender.com/allproducts')
+      .then((response) => response.json())
+      .then((data) => setAll_Product(data))
+      .catch((error) => console.error('Error fetching products:', error));
+
+    // Fetch cart data if the user is authenticated
+    if (localStorage.getItem('auth-token')) {
+      fetch('https://e-commerce-backend-c6zo.onrender.com/getcart', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'auth-token': `${localStorage.getItem('auth-token')}`,
+          'Content-Type': 'application/json',
+        },
+        body: "", // No body needed
+      })
+        .then((response) => response.json())
+        .then((data) => setCartItems(data))
+        .catch((error) => console.error('Error fetching cart:', error));
     }
-    return cart;
-}
+  }, []);
 
-const ShopContextProvider = (props) =>{
-    const [all_product,setAll_Product] = useState([]);
+  const addToCart = (itemId) => {
+    setCartItems((prev) => ({
+      ...prev,
+      [itemId]: prev[itemId] + 1 || 1, // Ensure first-time add works
+    }));
 
-    const [cartItems,setCartItems]=useState(getDefaultCart());
-
-    useEffect(()=>{
-        fetch('https://e-commerce-backend-c6zo.onrender.com/allproducts')
-        .then((response)=>response.json())
-        .then((data)=>setAll_Product(data))
-
-        if(localStorage.getItem('auth-token')){
-            fetch('https://e-commerce-backend-c6zo.onrender.com/getcart',{
-                method:'POST',
-                headers:{
-                    Accept:'application/form-data',
-                    'auth-token':`${localStorage.getItem('auth-token')}`,
-                    'content-Type':'application/json',
-                },
-                body:"",
-            })
-            .then((response)=>response.json())
-            .then((data)=>setCartItems(data));
-        }
-    },[])
-    
-    const addToCart=(itemId)=>{
-        setCartItems((prev)=>({...prev,[itemId]:prev[itemId]+1}))
-        if(localStorage.getItem('auth-token')){
-            fetch('https://e-commerce-backend-c6zo.onrender.com/addtocart',{
-                method:'POST',
-                headers:{
-                    Accept:'application/form-data',
-                    'auth-token':`${localStorage.getItem('auth-token')}`,
-                    'content-Type':'application/json',
-                },
-                body:JSON.stringify({"itemId":itemId}),
-            })
-            .then((response)=>response.json())
-            .then((data)=>console.log(data));
-        }
+    if (localStorage.getItem('auth-token')) {
+      fetch('https://e-commerce-backend-c6zo.onrender.com/addtocart', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'auth-token': `${localStorage.getItem('auth-token')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ itemId }),
+      })
+        .then((response) => response.json())
+        .then((data) => console.log('Add to Cart:', data))
+        .catch((error) => console.error('Error adding to cart:', error));
     }
+  };
 
-    const removeFromCart=(itemId)=>{
-        setCartItems((prev)=>({...prev,[itemId]:prev[itemId]-1}))
-        if(localStorage.getItem('auth-token')){
-            fetch('https://e-commerce-backend-c6zo.onrender.com/removefromcart',{
-                method:'POST',
-                headers:{
-                    Accept:'application/form-data',
-                    'auth-token':`${localStorage.getItem('auth-token')}`,
-                    'content-Type':'application/json',
-                },
-                body:JSON.stringify({"itemId":itemId}),
-            })
-            .then((response)=>response.json())
-            .then((data)=>console.log(data));
-        }
+  const removeFromCart = (itemId) => {
+    setCartItems((prev) => ({
+      ...prev,
+      [itemId]: Math.max(prev[itemId] - 1, 0), // Ensure cart can't go negative
+    }));
+
+    if (localStorage.getItem('auth-token')) {
+      fetch('https://e-commerce-backend-c6zo.onrender.com/removefromcart', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'auth-token': `${localStorage.getItem('auth-token')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ itemId }),
+      })
+        .then((response) => response.json())
+        .then((data) => console.log('Remove from Cart:', data))
+        .catch((error) => console.error('Error removing from cart:', error));
     }
+  };
 
-    const clearcart=(itemId)=>{
-        // setCartItems((prev)=>({...prev,[itemId]:prev[itemId]-1}))
-        // if(localStorage.getItem('auth-token')){
-        //     fetch('https://e-commerce-backend-c6zo.onrender.com/clearcart',{
-        //         method:'POST',
-        //         headers:{
-        //             Accept:'application/form-data',
-        //             'auth-token':`${localStorage.getItem('auth-token')}`,
-        //             'content-Type':'application/json',
-        //         },
-        //         body:JSON.stringify({"itemId":itemId}),
-        //     })
-        //     .then((response)=>response.json())
-        //     .then((data)=>console.log(data));
-        // }
-
-        // fetch('https://e-commerce-backend-c6zo.onrender.com/clearcart', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'auth-token': localStorage.getItem('auth-token')
-        //     }
-        // })
-        // .then((response) => response.json())
-        // .then((data) => {
-        //     console.log(data);
-        //     // Set cart to empty in frontend state
-        //     setCartItems({});
-            
-        //     // Redirect to home page or payment success page
-        //     window.location.href = '/home'; 
-        // })
-        // .catch((error) => console.error('Error clearing cart:', error));
-
-
-        if (localStorage.getItem('auth-token')) {
-            alert("heelo")
-            fetch('https://e-commerce-backend-c6zo.onrender.com/clearcart', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'auth-token': localStorage.getItem('auth-token'),
-                }
-            })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-    
-                // Update cart state to empty without refreshing the page
-                setCartItems({});  // Assuming you're using setCartItems to manage the cart state
-    
-                // Optionally, show a success message or redirect the user to another page
-                // window.location.href = '/home'; // Optional: Redirect after clearing cart
-            })
-            .catch((error) => console.error('Error clearing cart:', error));
-        }
+  const clearCart = () => {
+    if (localStorage.getItem('auth-token')) {
+      fetch('http://localhost:3000/clearcart', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'auth-token': `${localStorage.getItem('auth-token')}`,
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Cart cleared:', data);
+          setCartItems(getDefaultCart()); // Reset the cart in the frontend
+        })
+        .catch((error) => console.error('Error clearing cart:', error));
     }
+  };
 
-    const getTotalCartAmount = () => {
-        let totalAmount = 0;
-        for(const item in cartItems){
-            if(cartItems[item]>0){
-                let itemInfo=all_product.find((product)=>product.id===Number(item))
-                totalAmount += cartItems[item] * itemInfo.new_price;
-            }
+  const getTotalCartAmount = () => {
+    let totalAmount = 0;
+    for (const item in cartItems) {
+      if (cartItems[item] > 0) {
+        const itemInfo = all_product.find((product) => product.id === Number(item));
+        if (itemInfo) {
+          totalAmount += cartItems[item] * itemInfo.new_price;
         }
-        return totalAmount;
+      }
     }
+    return totalAmount;
+  };
 
-    const getTotalCartItems = () =>{
-        let totalItem=0;
-        for(const item in cartItems){
-            if(cartItems[item]>0){
-                totalItem+=cartItems[item];
-            }
-        }
-        return totalItem;
+  const getTotalCartItems = () => {
+    let totalItem = 0;
+    for (const item in cartItems) {
+      if (cartItems[item] > 0) {
+        totalItem += cartItems[item];
+      }
     }
+    return totalItem;
+  };
 
-    const contextValue = {all_product,cartItems,getTotalCartItems,getTotalCartAmount,addToCart,removeFromCart,clearcart};
+  const contextValue = {
+    all_product,
+    cartItems,
+    getTotalCartItems,
+    getTotalCartAmount,
+    addToCart,
+    removeFromCart,
+    clearCart, // Provide clearCart to the context
+  };
 
-    return(
-        <ShopContext.Provider value={contextValue}>
-            {props.children}
-        </ShopContext.Provider>
-    )
-}
+  return (
+    <ShopContext.Provider value={contextValue}>
+      {props.children}
+    </ShopContext.Provider>
+  );
+};
 
 export default ShopContextProvider;
