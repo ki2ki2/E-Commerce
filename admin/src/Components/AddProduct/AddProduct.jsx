@@ -22,7 +22,6 @@ const AddProducts = () => {
   }
 
   const Add_Product = async () =>{
-    console.log(productDetails);
     let responseData;
     let product = productDetails;
     let formData=new FormData();
@@ -40,7 +39,6 @@ const AddProducts = () => {
 
     if(responseData.success){
       product.image=responseData.image_url;
-      console.log(product);
 
       await fetch('https://e-commerce-backend-c6zo.onrender.com/addproduct',{
         method:'POST',
