@@ -16,8 +16,6 @@ app.use(cors());
 //checkout api
 app.post("/create-checkout-session",async(req,res)=>{
     const {products , cart_items} = req.body;
-    console.log("items",cart_items)
-
     try{
         const lineItems = products.map((product,index)=>{
             return{
@@ -45,10 +43,8 @@ app.post("/create-checkout-session",async(req,res)=>{
     }
 });
 
-
-app.listen(7000,()=>{
-    console.log("server start");
-})
+// app.listen(7000,()=>{
+// })
 
 // Database Connection with MongoDB
 // mongoose.connect(process.env.MONGO_URL || "mongodb+srv://kritikumari36312:backend_server@cluster0.n3rzche.mongodb.net/e-commerce", {
@@ -60,26 +56,23 @@ app.listen(7000,()=>{
 
 // some changes
 mongoose.connect(process.env.MONGO_URL || "mongodb+srv://kritikumari36312:backend_server@cluster0.n3rzche.mongodb.net/e-commerce")
-    .then(() => console.log("MongoDB connected"))
-    .catch(err => console.log("MongoDB connection error:", err));
-
-
+     .catch(() => {});
 
 // API Creation
 app.get("/",(req,res)=>{
     res.send("Express App is Running")
 })
 
-app.listen(port,(error)=>{
-    if(!error){
-        console.log("Server Running on Port "+port)
-    }
-    else{
-        console.log("Error : "+error)
-    }
-})
+// app.listen(port,(error)=>{
+//     if(!error){
+//         console.log("Server Running on Port "+port)
+//     }
+//     else{
+//         console.log("Error : "+error)
+//     }
+// })
 
-
+app.listen(port);
 
 //some changes
 const uploadDir = './upload/images';
@@ -199,9 +192,7 @@ app.post('/addproduct',async(req,res)=>{
         new_price:req.body.new_price,
         old_price:req.body.old_price,
     })
-    console.log(product);
     await product.save();
-    console.log("Saved");
     res.json({
         success:true,
         name:req.body.name,
@@ -211,7 +202,6 @@ app.post('/addproduct',async(req,res)=>{
 // Creating API for deleting Products
 app.post('/removeproduct',async(req,res)=>{
     await Product.findOneAndDelete({id:req.body.id});
-    console.log("Removed");
     res.json({
         success:true,
         name:req.body.name
@@ -221,7 +211,6 @@ app.post('/removeproduct',async(req,res)=>{
 //Creating API for getting all products
 app.get('/allproducts',async(req,res)=>{
     let products = await Product.find({});
-    console.log("All Products Fetched");
     res.send(products);
 })
 
@@ -301,7 +290,6 @@ app.post('/login',async (req,res)=>{
 app.get('/newcollections',async (req,res)=>{
     let products = await Product.find({});
     let newcollection = products.slice(1).slice(-8);
-    console.log("NewCollection Fetched");
     res.send(newcollection);
 })
 
@@ -309,7 +297,6 @@ app.get('/newcollections',async (req,res)=>{
 app.get('/popularinwomen',async (req,res)=>{
     let products = await Product.find({category:"women"});
     let popular_in_women = products.slice(0,4);
-    console.log("Popular in Women Fetched");
     res.send(popular_in_women);
 })
 
@@ -332,7 +319,6 @@ const fetchUser = async (req,res,next)=>{
 
 // Creating endpoint for adding products in cartdata
 app.post('/addtocart',fetchUser,async (req,res)=>{
-    console.log("added",req.body.itemId);
     let userData = await Users.findOne({_id:req.user.id});
     userData.cartData[req.body.itemId] += 1;
     await Users.findOneAndUpdate({_id:req.user.id},{cartData:userData.cartData});
@@ -341,7 +327,6 @@ app.post('/addtocart',fetchUser,async (req,res)=>{
 
 // Creating endpoint for remove product from cartdata
 app.post('/removefromcart',fetchUser,async (req,res)=>{
-    console.log("removed",req.body.itemId);
     let userData = await Users.findOne({_id:req.user.id});
     if(userData.cartData[req.body.itemId]>0)
     userData.cartData[req.body.itemId] -= 1;
@@ -351,7 +336,6 @@ app.post('/removefromcart',fetchUser,async (req,res)=>{
 
 // Creating endpoint to get cartdata
 app.post('/getcart',fetchUser,async (req,res)=>{
-    console.log("getcart");
     let userData=await Users.findOne({_id:req.user.id});
     res.json(userData.cartData);
 })
