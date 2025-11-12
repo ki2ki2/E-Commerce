@@ -17,10 +17,8 @@ const CartItems = () => {
             products:all_product.filter(product => cartItems[product.id]>0),
             cart_items: cartItems,
         };
-        console.log("body",body);
         
         try{
-            console.log("aaaaaa");
             const response = await fetch("https://e-commerce-backend-c6zo.onrender.com/create-checkout-session",{
                 method:"POST",
                 headers:{
@@ -33,14 +31,14 @@ const CartItems = () => {
             if (session.id) {
                 const result = await stripe.redirectToCheckout({ sessionId: session.id });
                 if (result.error) {
-                    console.log(result.error.message);
+                    alert(`Payment failed: ${result.error.message}`);
                 }
             } else {
-                console.log("Session creation failed");
+                alert("Failed to create a checkout session. Please try again.");
             }
         } 
         catch (error) {
-            console.log("Error during payment process:", error);
+            alert("Something went wrong during payment. Please try again later.");
         }
         
     }

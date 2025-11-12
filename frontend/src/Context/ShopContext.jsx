@@ -55,7 +55,6 @@ const ShopContextProvider = (props) => {
         body: JSON.stringify({ itemId }),
       })
         .then((response) => response.json())
-        .then((data) => console.log('Add to Cart:', data))
         .catch((error) => console.error('Error adding to cart:', error));
     }
   };
@@ -77,7 +76,6 @@ const ShopContextProvider = (props) => {
         body: JSON.stringify({ itemId }),
       })
         .then((response) => response.json())
-        .then((data) => console.log('Remove from Cart:', data))
         .catch((error) => console.error('Error removing from cart:', error));
     }
   };
@@ -94,7 +92,6 @@ const ShopContextProvider = (props) => {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log('Cart cleared:', data);
           setCartItems(getDefaultCart()); // Reset the cart in the frontend
         })
         .catch((error) => console.error('Error clearing cart:', error));
